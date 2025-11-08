@@ -1,87 +1,129 @@
-import React, { useState } from "react";
-import { TonConnectUI } from "@tonconnect/ui-react";
-import "./App.css";
+import React, { useEffect, useState } from "react";
+import tonConnectUI from "./tonconnect";
 
-function App() {
-  const [amount, setAmount] = useState(5); // Default TON amount
-  const [commission, setCommission] = useState(10); // Default commission %
-  const [receiver, setReceiver] = useState("UQCDFoAkxjfFc8pCVwNY5Lrn2kZAG8fbCK8NhsoR_7VE9DtA");
-  const [connected, setConnected] = useState(false);
+export default function App() {
+  const [wallet, setWallet] = useState(null);
+  const [amount, setAmount] = useState(5000); // default deal price
+  const [commissionPct, setCommissionPct] = useState(1); // commission %
+  const [deposit, setDeposit] = useState(300); // security deposit TON
+  const [statusMsg, setStatusMsg] = useState("");
+  const [txs, setTxs] = useState([]);
 
-  const tonConnectUI = new TonConnectUI({
-    manifestUrl: "https://ton-fragment-simulator.vercel.app/tonconnect-manifest.json"
-  });
+  useEffect(() => {
+    // seed demo txs
+    setTxs([
+      { id: 1, username: "@dangerous", amount: 120, status: "Completed", time: "2h ago" },
+      { id: 2, username: "@aiwo", amount: 50, status: "Pending", time: "5m ago" },
+      { id: 3, username: "@tiff", amount: 230, status: "Completed", time: "1d ago" }
+    ]);
+  }, []);
 
-  const handleConnect = async () => {
+  async function handleConnect() {
     try {
       await tonConnectUI.connectWallet();
-      setConnected(true);
-    } catch (err) {
-      console.error("Wallet connection failed:", err);
+      const w = tonConnectUI.wallet;
+      setWallet(w?.account ?? null);
+    } catch (e) {
+      console.error(e);
+      alert("Connection cancelled or failed.");
     }
-  };
+  }
 
-  const handleDisconnect = async () => {
-    await tonConnectUI.disconnect();
-    setConnected(false);
-  };
+  async function handleDisconnect() {
+    try {
+      await tonConnectUI.disconnect();
+      setWallet(null);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
-  const handlePay = async () => {
-    const finalAmount = amount - (amount * commission) / 100;
-    alert(
-      `💸 Payment Summary:
-Amount: ${amount} TON
-Commission: ${commission}%
-You will receive: ${finalAmount.toFixed(3)} TON`
-    );
-  };
+  function startExchangeSimulation() {
+    if (!wallet) return alert("Please connect wallet first.");
+    // simulate preparing
+    setStatusMsg("Preparing transaction...");
+    // add demo pending tx
+    const newTx = {
+      id: Date.now(),
+      username: wallet?.address ? `@${wallet.address.slice(2,9)}` : "@buyer",
+      amount,
+      status: "Pending",
+      time: "just now"
+    };
+    setTxs(prev => [newTx, ...prev].slice(0, 20));
+    // simulate confirmed after 6s
+    setTimeout(() => {
+      setTxs(prev => prev.map(t => t.id === newTx.id ? {...t, status: "Completed", time: "just now"} : t));
+      setStatusMsg("Transaction completed ✅");
+      setTimeout(()=>setStatusMsg(""),2000);
+    }, 6000);
+  }
 
   return (
-    <div className="app">
-      <h1>💎 TON Fragment Simulator</h1>
+    <div className="page">
+      <header className="topbar">
+        <a href="https://fragment.com" target="_blank" rel="noreferrer" className="brand">Fragment</a>
+        <div className="right">
+          {wallet ? (
+            <>
+              <span className="addr">{wallet.address?.slice(0,8)}...{wallet.address?.slice(-6)}</span>
+              <button className="btn disconnect" onClick={handleDisconnect}>Disconnect</button>
+            </>
+          ) : (
+            <button className="btn connect" onClick={handleConnect}>Connect Tonkeeper</button>
+          )}
+        </div>
+      </header>
 
-      <div className="card">
-        <p>Receiver Address:</p>
-        <input
-          type="text"
-          value={receiver}
-          onChange={(e) => setReceiver(e.target.value)}
-        />
+      <main className="main">
+        <section className="card">
+          <div className="card-row">
+            <div>
+              <div className="muted">Top name</div>
+              <input className="field" value={"rakib90100.t.me"} readOnly />
+            </div>
+            <div>
+              <div className="muted">Deal Price (TON)</div>
+              <input className="field" value={amount} onChange={(e)=>setAmount(Number(e.target.value))} />
+            </div>
+          </div>
 
-        <p>Enter Amount (TON):</p>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
-        />
+          <div className="card-row">
+            <div>
+              <div className="muted">Commission (%)</div>
+              <input className="field" value={commissionPct} onChange={(e)=>setCommissionPct(Number(e.target.value))} />
+            </div>
+            <div>
+              <div className="muted">Security Deposit (TON)</div>
+              <input className="field" value={deposit} onChange={(e)=>setDeposit(Number(e.target.value))} />
+            </div>
+          </div>
 
-        <p>Commission (%):</p>
-        <input
-          type="number"
-          value={commission}
-          onChange={(e) => setCommission(parseFloat(e.target.value))}
-        />
+          <div className="actions">
+            <button className="btn primary" onClick={startExchangeSimulation}>Start Exchange</button>
+          </div>
 
-        {!connected ? (
-          <button onClick={handleConnect} className="btn connect">
-            🔗 Connect Wallet
-          </button>
-        ) : (
-          <button onClick={handleDisconnect} className="btn disconnect">
-            ❌ Disconnect Wallet
-          </button>
-        )}
+          <div className="status">{statusMsg}</div>
+        </section>
 
-        <button onClick={handlePay} className="btn pay">
-          💰 Simulate Payment
-        </button>
-      </div>
-
-      <footer>
-        <p>Built for TON Fragment Simulation 🔹</p>
-      </footer>
+        <aside className="txs">
+          <h3>Latest Transactions</h3>
+          <ul>
+            {txs.map(tx => (
+              <li key={tx.id} className={`tx ${tx.status.toLowerCase()}`}>
+                <div className="tx-left">
+                  <div className="username">{tx.username}</div>
+                  <div className="time">{tx.time}</div>
+                </div>
+                <div className="tx-right">
+                  <div className="amount">{tx.amount} TON</div>
+                  <div className="status-label">{tx.status}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </main>
     </div>
   );
 }
-
-export default App;
