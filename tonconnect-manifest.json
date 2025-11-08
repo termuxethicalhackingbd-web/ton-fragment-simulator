@@ -1,8 +1,9 @@
 {
   "url": "https://ton-fragment-simulator.vercel.app",
   "name": "TON Fragment Simulator",
-  "iconUrl": "https://ton-fragment-simulator.vercel.app/icon.png",
+  "iconUrl": "https://ton-fragment-simulator.vercel.app/logo.png",
   "termsOfUseUrl": "https://ton-fragment-simulator.vercel.app/terms",
   "privacyPolicyUrl": "https://ton-fragment-simulator.vercel.app/privacy",
-  "tonReceiver": "UQCDFoAkxjfFc8pCVwNY5Lrn2kZAG8fbCK8NhsoR_7VE9DtA"
+  "bridgeUrl": "https://bridge.tonapi.io/bridge",
+  "network": "mainnet"
 }
