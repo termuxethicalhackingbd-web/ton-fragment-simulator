@@ -1,0 +1,95 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  background: #0b0e13;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  user-select: none;
+  overflow-y: scroll;
+}
+
+.app-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.header a {
+  color: #00bfff;
+  font-size: 1.5em;
+  text-decoration: none;
+}
+
+.wallet-section {
+  margin-top: 100px;
+}
+
+.connect-btn {
+  background: #0078ff;
+  border: none;
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.1em;
+}
+
+.trade-container {
+  margin-top: 30px;
+}
+
+.deal-card {
+  background: #121821;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  display: inline-block;
+  text-align: left;
+}
+
+.editable {
+  background: transparent;
+  border: none;
+  color: #0ef;
+  font-size: 1em;
+  width: auto;
+}
+
+.editable:focus {
+  outline: none;
+  border-bottom: 1px solid #0ef;
+}
+
+.start-btn {
+  width: 100%;
+  padding: 12px;
+  background: #00bfff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1em;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.transactions {
+  margin-top: 40px;
+  background: #161b24;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.transactions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.transactions li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #333;
+  padding: 8px 0;
+}
+
+.transactions li span {
+  color: #ccc;
+}
