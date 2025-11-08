@@ -1,83 +1,104 @@
-import React, { useState } from "react";
-import "./App.css";
+import { useTonConnectUI, useTonAddress } from "@tonconnect/ui-react";
+import { useState } from "react";
 
-function App() {
+export default function App() {
+  const [tonConnectUI] = useTonConnectUI();
+  const userAddress = useTonAddress();
   const [connected, setConnected] = useState(false);
-  const [dealInfo, setDealInfo] = useState({
-    name: "rakib90100.t.me",
-    username: "@rakib90100",
-    web: "t.me/rakib90100",
-    tonweb: "rakib9010",
-    dealPrice: "5000 TON",
-    commission: "2%",
-    deposit: "25 TON"
-  });
+  const [amount, setAmount] = useState("");
+  const [commission, setCommission] = useState("0.02");
+  const [status, setStatus] = useState("");
 
-  const [transactions] = useState([
-    { user: "@dangerous", amount: "50 TON", time: "2m ago" },
-    { user: "@aiwo", amount: "10 TON", time: "5m ago" },
-    { user: "@tiff", amount: "20 TON", time: "10m ago" },
-    { user: "@trial", amount: "75 TON", time: "15m ago" },
-  ]);
+  const handleConnect = async () => {
+    await tonConnectUI.connectWallet();
+    setConnected(true);
+  };
 
-  const handleConnect = () => setConnected(true);
+  const handleSend = async () => {
+    if (!amount) return alert("Enter TON amount!");
+    const total = parseFloat(amount) + parseFloat(commission);
+
+    setStatus("Processing...");
+    setTimeout(() => {
+      setStatus(`✅ Transaction Successful! Sent ${total} TON (Including ${commission} TON fee)`);
+    }, 2500);
+  };
 
   return (
-    <div className="app-container" onContextMenu={(e) => e.preventDefault()}>
-      <header className="header">
-        <a href="https://fragment.com" target="_blank" rel="noreferrer">
-          Fragment
-        </a>
-      </header>
+    <div
+      style={{
+        background: "#0d0d0d",
+        minHeight: "100vh",
+        color: "#fff",
+        textAlign: "center",
+        paddingTop: "80px",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <h1 style={{ color: "#00bfff" }}>💎 TON Fragment Simulator</h1>
 
       {!connected ? (
-        <div className="wallet-section">
-          <button className="connect-btn" onClick={handleConnect}>
-            Connect Tonkeeper
-          </button>
-        </div>
+        <button
+          onClick={handleConnect}
+          style={{
+            background: "#007bff",
+            border: "none",
+            padding: "12px 24px",
+            borderRadius: "8px",
+            color: "#fff",
+            fontSize: "16px",
+            marginTop: "20px",
+          }}
+        >
+          Connect Tonkeeper
+        </button>
       ) : (
-        <div className="trade-container">
-          <div className="deal-card">
+        <div style={{ marginTop: "30px" }}>
+          <p>Connected Wallet:</p>
+          <p style={{ color: "#00ff88" }}>{userAddress || "Loading..."}</p>
+
+          <div style={{ marginTop: "20px" }}>
+            <label>Enter TON Amount:</label>
+            <br />
             <input
-              className="editable"
-              value={dealInfo.name}
-              onChange={(e) => setDealInfo({ ...dealInfo, name: e.target.value })}
+              type="number"
+              placeholder="e.g. 1.5"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              style={{
+                padding: "8px",
+                borderRadius: "5px",
+                border: "1px solid #444",
+                marginTop: "5px",
+                width: "180px",
+                textAlign: "center",
+              }}
             />
-            <div className="info">
-              <p>Username: <input className="editable" value={dealInfo.username}
-                onChange={(e) => setDealInfo({ ...dealInfo, username: e.target.value })} /></p>
-              <p>Web: <input className="editable" value={dealInfo.web}
-                onChange={(e) => setDealInfo({ ...dealInfo, web: e.target.value })} /></p>
-              <p>Ton Web 3.0: <input className="editable" value={dealInfo.tonweb}
-                onChange={(e) => setDealInfo({ ...dealInfo, tonweb: e.target.value })} /></p>
-              <p>Deal Price: <input className="editable" value={dealInfo.dealPrice}
-                onChange={(e) => setDealInfo({ ...dealInfo, dealPrice: e.target.value })} /></p>
-              <p>Commission: <input className="editable" value={dealInfo.commission}
-                onChange={(e) => setDealInfo({ ...dealInfo, commission: e.target.value })} /></p>
-              <p>Security Deposit: <input className="editable" value={dealInfo.deposit}
-                onChange={(e) => setDealInfo({ ...dealInfo, deposit: e.target.value })} /></p>
-            </div>
-
-            <button className="start-btn">Start Exchange</button>
           </div>
 
-          <div className="transactions">
-            <h3>Latest Transactions</h3>
-            <ul>
-              {transactions.map((tx, i) => (
-                <li key={i}>
-                  <span>{tx.user}</span>
-                  <span>{tx.amount}</span>
-                  <span>{tx.time}</span>
-                </li>
-              ))}
-            </ul>
+          <div style={{ marginTop: "20px" }}>
+            <p>💰 Commission: {commission} TON</p>
+            <p>Total: {amount ? parseFloat(amount) + parseFloat(commission) : "0"} TON</p>
           </div>
+
+          <button
+            onClick={handleSend}
+            style={{
+              background: "#00b894",
+              border: "none",
+              padding: "12px 24px",
+              borderRadius: "8px",
+              color: "#fff",
+              fontSize: "16px",
+              marginTop: "20px",
+            }}
+          >
+            Start Exchange
+          </button>
+
+          <p style={{ marginTop: "20px", color: "#bbb" }}>{status}</p>
         </div>
       )}
     </div>
   );
-}
-
-export default App;
+          }
