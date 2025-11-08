@@ -1,23 +1,26 @@
-<script type="module">
-import { TonConnectUI } from "https://unpkg.com/@tonconnect/ui/dist/tonconnect-ui.min.js";
+import { TonConnectUI } from "@tonconnect/ui";
 
-const tonConnectUI = new TonConnectUI({
-  manifestUrl: "https://nt-simulator-6s12.vercel.app/tonconnect-manifest.json"
+// Initialize TON Connect
+export const tonConnectUI = new TonConnectUI({
+  manifestUrl: "https://ton-fragment-simulator.vercel.app/tonconnect-manifest.json"
 });
 
-const connectButton = document.querySelector("#connectTonkeeper");
-
-if (connectButton) {
-  connectButton.addEventListener("click", async () => {
-    try {
-      await tonConnectUI.connectWallet();
-      const wallet = tonConnectUI.wallet;
-      if (wallet) {
-        alert(`Connected: ${wallet.account.address}`);
-      }
-    } catch (error) {
-      alert("Connection failed or cancelled!");
+// Function to connect wallet
+export async function connectWallet() {
+  try {
+    const wallet = await tonConnectUI.connectWallet();
+    if (wallet) {
+      alert(`✅ Connected: ${wallet.account.address}`);
+      console.log("Wallet connected:", wallet);
     }
-  });
+  } catch (error) {
+    alert("❌ Connection failed or cancelled!");
+    console.error("TON Connect error:", error);
+  }
 }
-</script>
+
+// Function to disconnect wallet
+export async function disconnectWallet() {
+  await tonConnectUI.disconnect();
+  alert("🔌 Wallet disconnected");
+}
