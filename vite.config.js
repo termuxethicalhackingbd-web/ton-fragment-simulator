@@ -1,6 +1,14 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import React from "react";
+import { connectWallet, disconnectWallet } from "../tonconnect";
 
-export default defineConfig({
-  plugins: [react()]
-})
+function App() {
+  return (
+    <div className="app">
+      <h1>TON Fragment Simulator</h1>
+      <button onClick={connectWallet}>Connect Wallet</button>
+      <button onClick={disconnectWallet}>Disconnect</button>
+    </div>
+  );
+}
+
+export default App;
