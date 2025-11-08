@@ -1,50 +1,63 @@
-body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  background: #0d1117;
-  color: #e6edf3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.container {
-  background: #161b22;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+.app {
   text-align: center;
-  width: 320px;
+  padding: 40px;
+  font-family: "Poppins", sans-serif;
+  background: radial-gradient(circle at top, #001428, #000);
+  color: white;
+  min-height: 100vh;
 }
 
-h1 {
-  color: #58a6ff;
-  font-size: 22px;
-  margin-bottom: 20px;
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
 }
 
-button {
-  background: #238636;
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0 14px;
   border: none;
-  border-radius: 10px;
-  padding: 12px 18px;
+  border-radius: 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 16px;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-top: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
-button:hover {
-  background: #2ea043;
+.btn.connect {
+  background-color: #2b8eff;
 }
 
-.wallet-info {
-  margin-top: 15px;
-  background: #0d1117;
-  border-radius: 8px;
-  padding: 10px;
+.btn.disconnect {
+  background-color: #ff4242;
+}
+
+.btn.pay {
+  background-color: #00c853;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+footer {
+  margin-top: 30px;
+  opacity: 0.7;
   font-size: 14px;
-  color: #8b949e;
-  word-break: break-all;
 }
