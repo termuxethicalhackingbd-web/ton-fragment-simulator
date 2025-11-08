@@ -1,0 +1,8 @@
+{
+  "url": "https://YOUR_VERCEL_DOMAIN", 
+  "name": "TON Fragment Simulator",
+  "iconUrl": "https://YOUR_VERCEL_DOMAIN/logo.png",
+  "termsOfUseUrl": "https://YOUR_VERCEL_DOMAIN/terms",
+  "privacyPolicyUrl": "https://YOUR_VERCEL_DOMAIN/privacy",
+  "network": "mainnet"
+}
